@@ -174,3 +174,12 @@ Key Generated, fetch the public key
 
 4. Configure username and email with git
 ![[Screenshot From 2026-05-08 07-32-45.png]]
+
+5. Commit the change
+![[Screenshot From 2026-05-08 07-33-21.png]]
+6. Create a github repo 
+![[Screenshot From 2026-05-08 07-34-33.png]]
+Add it to local git
+![[Pasted image 20260508073519.png|697]]
+
+7. Push the code
