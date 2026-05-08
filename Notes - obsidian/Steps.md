@@ -257,3 +257,5 @@ def delete_bucket_service():
 
 ![[Screenshot From 2026-05-08 08-09-46.png]]
 # Step 3: Push the code to github
+![[Screenshot From 2026-05-08 08-11-37.png]]
+
