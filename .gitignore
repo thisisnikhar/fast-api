@@ -1,1 +1,6 @@
 *.png
+*.md
+*.obsidian
+*.idea
+__pycache__/
+*.pyc
