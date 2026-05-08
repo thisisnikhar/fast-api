@@ -183,3 +183,77 @@ Add it to local git
 ![[Pasted image 20260508073519.png|697]]
 
 7. Push the code
+
+# Step 2: Delete Bucket Service
+**s3/routes.py**
+```
+from fastapi import APIRouter
+from s3.schemas import CreateBucketRequest
+
+from s3.service import create_bucket_service,delete_bucket_service
+router = APIRouter()
+
+
+@router.get("/")
+async def home():
+    return {"message": "Home Page"}
+
+
+@router.post("/bucket")
+async def create_bucket(payload:CreateBucketRequest):
+    bucket_name = payload.name
+    status, message = create_bucket_service(bucket_name)
+    response = {
+        "status": status,
+        "message": message
+    }
+    return response
+
+
+@router.delete("/bucket")
+async def remove_all_bucket():
+    status, message = delete_bucket_service()
+    response = {
+        "status": status,
+        "message": message
+    }
+    return response
+```
+
+**s3/service.py**
+```
+import boto3
+
+s3 = boto3.client("s3")
+s3_resource = boto3.resource("s3")
+
+def create_bucket_service(bucket_name):
+    try:
+        s3.create_bucket(
+            Bucket=bucket_name,
+            CreateBucketConfiguration={
+                "LocationConstraint": "ap-south-1"
+            }
+        )
+        return "success","Bucket created successfully"
+    except Exception as e:
+        print(e)
+        return "error","Error while creating a bucket"
+
+
+def delete_bucket_service():
+    try:
+        response = s3.list_buckets() # Get all the buckets
+        for bucket in response["Buckets"]:
+            name = bucket["Name"]
+            # Empty the bucket
+            bucket = s3_resource.Bucket(name)
+            bucket.delete() # Deletes the bucket
+        return "success","Buckets deleted successfully"
+    except Exception as e:
+        print(e)
+        return "error","Error while deleting the buckets"
+```
+
+![[Screenshot From 2026-05-08 08-09-46.png]]
+# Step 3: Push the code to github
