@@ -1,9 +1,8 @@
-import ast
-
 from fastapi import APIRouter
 from s3.schemas import CreateBucketRequest
 
-from s3.service import create_bucket_service,delete_bucket_service,get_all_buckets_service,delete_specific_bucket_service
+from s3.service import (create_bucket_service,delete_bucket_service,get_all_buckets_service,
+                        delete_specific_bucket_service,get_bucket_details_service)
 from fastapi.responses import JSONResponse
 router = APIRouter()
 
@@ -61,3 +60,19 @@ async def get_all_buckets():
         "message": message
     }
     return JSONResponse(status_code=200,content=content)
+
+
+@router.get("/bucket/{bucket_name}")
+async def get_bucket_details(bucket_name):
+    status, data = get_bucket_details_service(bucket_name)
+    if status == "success":
+        content = {
+            "status": status,
+            "data": data
+        }
+        return JSONResponse(status_code=200,content=content)
+    else:
+        content = {
+            "message": "Unable to fetch bucket details"
+        }
+        return JSONResponse(status_code=500,content=content)
