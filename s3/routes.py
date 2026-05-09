@@ -51,8 +51,8 @@ async def delete_specific_bucket(bucket_name: str):
     else:
         return JSONResponse(status_code=500,content=content)
 
-
-@router.get("/bucket")
+# git commit -m "Delete specific and all buckets"
+@router.get("/all_bucket")
 async def get_all_buckets():
     status, message = get_all_buckets_service()
     content = {
