@@ -30,7 +30,6 @@ def delete_bucket_service():
             bucket.delete()
         return "success","Buckets deleted successfully"
     except Exception as e:
-        print(e)
         return "error","Error while deleting the buckets"
 
 
@@ -43,7 +42,6 @@ def get_all_buckets_service():
             bucket_list.append(name)
         return "success",bucket_list
     except Exception as e:
-        print(e)
         return "error","Error while fetching the bucket list"
 
 
@@ -58,5 +56,35 @@ def delete_specific_bucket_service(bucket_name):
 
         return "success",f"Bucket {bucket_name} deleted successfully"
     except Exception as e:
-        print(e)
         return "error",f"Error while deleting the bucket - {bucket_name}"
+
+
+def get_bucket_data_service(bucket_name):
+    try:
+        bucket = s3_resource.Bucket(bucket_name)
+        data = []
+        for obj in bucket.objects.all():
+            data.append(obj.key)
+        return "success",data
+    except Exception as e:
+        return "error",f"Error while fetching bucket data from {bucket_name}"
+
+
+def delete_bucket_object_service(bucket_name,file_name):
+    try:
+        obj = s3_resource.Object(bucket_name,file_name)
+        obj.delete()
+        return "success",f"{file_name} deleted from bucket {bucket_name}"
+    except Exception as e:
+        return "error",f"Error while deleting file - {file_name} from bucket - {bucket_name}"
+
+
+def empty_bucket_service(bucket_name):
+    try:
+        versioning = s3_resource.BucketVersioning(bucket_name)
+
+        bucket = s3_resource.Bucket(bucket_name)
+        bucket.objects.all().delete()
+        return "success",f"{bucket_name} has been emptied"
+    except Exception as e:
+        return "error",f"Error while emptying the bucket - {bucket_name}"
