@@ -67,8 +67,6 @@ def delete_specific_bucket_service(bucket_name):
 def get_bucket_details_service(bucket_name):
     try:
         bucket = s3_resource.Bucket(bucket_name)
-        print("-"*100)
-        print(bucket)
         created_on_utc = bucket.creation_date
         # Converting time zone from utc to India
         created_on_mumbai = created_on_utc.astimezone(
@@ -76,10 +74,6 @@ def get_bucket_details_service(bucket_name):
         )
         created_on = created_on_mumbai.isoformat()
         region = s3.get_bucket_location(Bucket=bucket_name).get("LocationConstraint")
-        # print(f"location: {location}, created_at: {created_at}")
-        # return "success","test"
-        print(created_on, region)
-        # return  "success",""
         data = {
             "name": bucket_name,
             "created_on": created_on,
@@ -87,5 +81,4 @@ def get_bucket_details_service(bucket_name):
         }
         return "success",data
     except Exception as e:
-        print(e)
         return "error", f"Error while fetching the bucket details - {bucket_name}"
