@@ -5,4 +5,4 @@ class LaunchInstanceRequest(BaseModel):
     launch_template:str
 
 class TerminateInstanceRequest(BaseModel):
-    name:str
+    instance_ids:list[str]
