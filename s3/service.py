@@ -75,7 +75,7 @@ def delete_bucket_object_service(bucket_name,file_name):
     try:
         obj = s3_resource.Object(bucket_name,file_name)
         obj.delete()
-        return "success",f"{file_name} deleted from bucket {bucket_name}"
+        return "success",f"{file_name} has been deleted from bucket {bucket_name}"
     except ClientError as e:
         return "error",str(e)
 
