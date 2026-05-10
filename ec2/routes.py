@@ -1,7 +1,8 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from ec2.service import get_instances_service, launch_instance_service, get_instances_by_state_service
-from ec2.schemas import LaunchInstanceRequest
+from ec2.service import (get_instances_service, launch_instance_service,
+                         get_instances_by_state_service,terminate_instance_by_id_service)
+from ec2.schemas import LaunchInstanceRequest, TerminateInstanceRequest
 
 router = APIRouter()
 
@@ -25,6 +26,7 @@ async def get_instance_by_state(state):
     }
     return JSONResponse(status_code=200,content=content)
 
+
 @router.post("/instances")
 async def launch_instance(payload: LaunchInstanceRequest):
     instance_name = payload.name
@@ -36,5 +38,19 @@ async def launch_instance(payload: LaunchInstanceRequest):
     }
     if status != "error":
         return JSONResponse(status_code=201, content=content)
+    else:
+        return JSONResponse(status_code=500, content=content)
+
+
+@router.delete("/instances/")
+async def terminate_instance(payload: TerminateInstanceRequest):
+    instance_ids = payload.instance_ids
+    status, message = terminate_instance_by_id_service(instance_ids)
+    content = {
+        "status": status,
+        "message": message
+    }
+    if status != "error":
+        return JSONResponse(status_code=200,content=content)
     else:
         return JSONResponse(status_code=500, content=content)

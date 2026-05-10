@@ -63,3 +63,8 @@ def get_instances_by_state_service(state):
             }
         )
     return "success", instances_list
+
+
+def terminate_instance_by_id_service(instance_ids):
+    response = ec2.terminate_instances(InstanceIds=instance_ids)
+    return "success",f"Instance with id {instance_ids} terminated"
