@@ -7,7 +7,7 @@
 
 A backend REST API project built using Python, FastAPI and boto3 to interact with AWS services programmatically.
 
-The goal of this project is to learn:
+The goal of this project is to integrate:
 
 * AWS services
 * boto3 SDK
