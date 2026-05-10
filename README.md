@@ -342,20 +342,20 @@ AWS Services (EC2 / S3)
 
 ---
 
-# Learning Goals
+# Practice Goals
 
 This project was created to:
 
-* Learn AWS programmatically using boto3
-* Understand infrastructure automation
-* Practice FastAPI development
+* Demonstrate the usage of AWS programmatically using boto3
+* Demonstrate infrastructure automation
+* Demonstrate FastAPI development
 * Build REST APIs
-* Learn Git branching and PR workflow
+* Demonstrate Git branching and PR workflow
 * Improve backend engineering skills
 
 ---
 
-# Current Learning Focus
+# Current Practice Focus
 
 This project was primarily built to practice:
 
