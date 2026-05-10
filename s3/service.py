@@ -1,4 +1,5 @@
 import boto3
+from botocore.exceptions import ClientError
 
 s3 = boto3.client("s3")
 s3_resource = boto3.resource("s3")
@@ -12,8 +13,8 @@ def create_bucket_service(bucket_name):
             }
         )
         return "success","Bucket created successfully"
-    except Exception as e:
-        return "error",e.args[0]
+    except ClientError as e:
+        return "error",str(e.args[0])
 
 
 def delete_bucket_service():
@@ -29,9 +30,8 @@ def delete_bucket_service():
             # Delete the bucket
             bucket.delete()
         return "success","Buckets deleted successfully"
-    except Exception as e:
-        print(e)
-        return "error","Error while deleting the buckets"
+    except ClientError as e:
+        return "error",str(e)
 
 
 def get_all_buckets_service():
@@ -42,9 +42,8 @@ def get_all_buckets_service():
             name = bucket["Name"]
             bucket_list.append(name)
         return "success",bucket_list
-    except Exception as e:
-        print(e)
-        return "error","Error while fetching the bucket list"
+    except ClientError as e:
+        return "error",str(e)
 
 
 def delete_specific_bucket_service(bucket_name):
@@ -57,6 +56,34 @@ def delete_specific_bucket_service(bucket_name):
         bucket.delete()
 
         return "success",f"Bucket {bucket_name} deleted successfully"
-    except Exception as e:
-        print(e)
-        return "error",f"Error while deleting the bucket - {bucket_name}"
+    except ClientError as e:
+        return "error",str(e)
+
+
+def get_bucket_data_service(bucket_name):
+    try:
+        bucket = s3_resource.Bucket(bucket_name)
+        data = []
+        for obj in bucket.objects.all():
+            data.append(obj.key)
+        return "success",data
+    except ClientError as e:
+        return "error",str(e)
+
+
+def delete_bucket_object_service(bucket_name,file_name):
+    try:
+        obj = s3_resource.Object(bucket_name,file_name)
+        obj.delete()
+        return "success",f"{file_name} has been deleted from bucket {bucket_name}"
+    except ClientError as e:
+        return "error",str(e)
+
+
+def empty_bucket_service(bucket_name):
+    try:
+        bucket = s3_resource.Bucket(bucket_name)
+        bucket.objects.all().delete()
+        return "success",f"{bucket_name} has been emptied"
+    except ClientError as e:
+        return "error",str(e)

@@ -1,9 +1,10 @@
-import ast
-
 from fastapi import APIRouter
+
 from s3.schemas import CreateBucketRequest
 
-from s3.service import create_bucket_service,delete_bucket_service,get_all_buckets_service,delete_specific_bucket_service
+from s3.service import create_bucket_service,delete_bucket_service,get_all_buckets_service,\
+    delete_specific_bucket_service,get_bucket_data_service,delete_bucket_object_service,\
+    empty_bucket_service
 from fastapi.responses import JSONResponse
 router = APIRouter()
 
@@ -16,7 +17,7 @@ async def home():
     return JSONResponse(status_code=200,content=content)
 
 
-@router.post("/bucket")
+@router.post("/buckets")
 async def create_bucket(payload:CreateBucketRequest):
     bucket_name = payload.name
     status, message = create_bucket_service(bucket_name)
@@ -30,7 +31,7 @@ async def create_bucket(payload:CreateBucketRequest):
         return JSONResponse(status_code=500,content=content)
 
 
-@router.delete("/bucket")
+@router.delete("/buckets")
 async def remove_all_bucket():
     status, message = delete_bucket_service()
     content = {
@@ -40,7 +41,7 @@ async def remove_all_bucket():
     return JSONResponse(status_code=200,content=content)
 
 
-@router.delete("/bucket/{bucket_name}")
+@router.delete("/buckets/{bucket_name}")
 async def delete_specific_bucket(bucket_name: str):
     status,message = delete_specific_bucket_service(bucket_name)
     content = {
@@ -53,7 +54,7 @@ async def delete_specific_bucket(bucket_name: str):
         return JSONResponse(status_code=500,content=content)
 
 
-@router.get("/bucket")
+@router.get("/buckets")
 async def get_all_buckets():
     status, message = get_all_buckets_service()
     content = {
@@ -61,3 +62,47 @@ async def get_all_buckets():
         "message": message
     }
     return JSONResponse(status_code=200,content=content)
+
+
+@router.get("/buckets/{bucket_name}")
+async def get_bucket_data(bucket_name):
+    status, message = get_bucket_data_service(bucket_name)
+
+    content = {
+        "status": status,
+        "message": message
+    }
+    return JSONResponse(status_code=200,content=content)
+
+
+@router.delete("/buckets/{bucket_name}/files/{file_name}")
+async def delete_bucket_object(bucket_name,file_name: str):
+    status, message = delete_bucket_object_service(bucket_name,file_name)
+
+    content = {
+        "status": status,
+        "message": message
+    }
+
+    if status == "success":
+        status_code = 200
+    else:
+        status_code = 404
+
+    return JSONResponse(status_code=status_code,content=content)
+
+
+@router.delete("/buckets/{bucket_name}/files")
+async def empty_bucket(bucket_name: str):
+    status, message = empty_bucket_service(bucket_name)
+    content = {
+        "status": status,
+        "message": message
+    }
+
+    if status == "success":
+        status_code = 200
+    else:
+        status_code = 404
+
+    return JSONResponse(status_code=status_code,content=content)
