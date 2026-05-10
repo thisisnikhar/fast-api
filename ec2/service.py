@@ -1,6 +1,6 @@
 import boto3
 from datetime import datetime
-from botocore.exceptions import ClientError,Resou
+from botocore.exceptions import ClientError
 
 
 ec2 = boto3.client("ec2",region_name="ap-south-1")
